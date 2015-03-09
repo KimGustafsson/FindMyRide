@@ -13,13 +13,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-// anus
-    //banan
-
-    // Simon är en banan
-
-    //ninja
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
