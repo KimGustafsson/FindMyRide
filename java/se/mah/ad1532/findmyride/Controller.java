@@ -2,6 +2,7 @@ package se.mah.ad1532.findmyride;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -21,12 +22,7 @@ public class Controller {
         this.mainActivity = mainActivity;
         map = (MapFragment) mainActivity.getFragmentManager().findFragmentById(R.id.mapFrag);
         switch_onoff = (Switch) mainActivity.findViewById(R.id.switch_onoff);
-        switch_onoff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mainActivity, "Tja", Toast.LENGTH_SHORT).show();
-            }
-        });
+        switch_onoff.setOnCheckedChangeListener(new onoffListener());
         initializeMap(map);
     }
 
@@ -37,5 +33,16 @@ public class Controller {
         malmo = new LatLng(55.59362448, 13.09414008);
         myMap.setMyLocationEnabled(true);
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(malmo, 8));
+    }
+
+    private class onoffListener implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked){
+                Toast.makeText(mainActivity,"Checked!",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(mainActivity,"Not Checked!",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
