@@ -15,6 +15,7 @@ public class MainActivity extends ActionBarActivity {
     }
 // anus
     //banan
+    //ninja
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
