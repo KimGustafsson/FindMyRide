@@ -15,7 +15,11 @@ public class MainActivity extends ActionBarActivity {
     }
 // anus
     //banan
+
     // Simon är en banan
+
+    //ninja
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
