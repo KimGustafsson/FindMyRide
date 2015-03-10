@@ -22,5 +22,13 @@
             android:id="@+id/switch_onoff"
             android:layout_gravity="center_horizontal|bottom" />
 
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Poke"
+            android:id="@+id/btn_poke"
+            android:layout_gravity="right|bottom" />
+
     </FrameLayout>
 </LinearLayout>
