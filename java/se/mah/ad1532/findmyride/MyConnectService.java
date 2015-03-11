@@ -1,5 +1,6 @@
 package se.mah.ad1532.findmyride;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -122,12 +123,18 @@ public class MyConnectService  {
             String[]info = message.split(",");
             pos = new LatLng(Double.valueOf(info[0]), Double.valueOf(info[1]));
             Log.i("Receive","innan changeBikePos()");
-            new Thread(new Runnable() {
+            Handler mainHandler = new Handler(activity.getMainLooper());
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    activity.controller.changeBikePos(pos);
+                    try{
+                        activity.controller.changeBikePos(pos);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.i("ERROR","fel i try catch i importantStuff()");
+                    }
                 }
-            }).start();
+            });
             Log.i("Receive", "efter changeBikePos()");
             sendMessage("25");
             Log.i("Receive","efter sendMessage(25)");
