@@ -20,6 +20,13 @@ import java.net.Socket;
 public class MyConnectService  {
     public static final String SERVERIP = "213.188.152.138";
     public static final int SERVERPORT = 25002;
+
+    // Koder till servern
+    final String start_nbr = "125";
+    final String rideID = "1337";
+    final String stop_nbr = "175";
+    final String confirmRecive = "150";
+
     private Socket socket;
     private Receive receive;
     private InputStream is;
@@ -50,11 +57,11 @@ public class MyConnectService  {
                         String message = query + "\n";
                         bw.write(message);
                         bw.flush();
-                        Log.i("MyConnectService", "sendMessage kördes");
+                        Log.i("Debugg", "sendMessage kördes");
                         String state = receive.getState().toString();
-                        Log.i("MyConnectService", "sendMessage() receive state: " + state);
+                        Log.i("Debugg", "sendMessage() receive state: " + state);
                     } catch (Exception e) {
-                        Log.i("MyConnectService", "sendMessage fail");
+                        Log.i("Debugg", "sendMessage fail");
                         if(receive == null) {
                             receive = new Receive();
                             receive.start();
@@ -70,9 +77,12 @@ public class MyConnectService  {
 
 
     public void disconnectSocket(){
+        Log.i("Debugg", "disconnectSocket()");
+        sendMessage(stop_nbr);
         try {
-            if(socket!=null)
-            socket.close();
+            if(socket!=null) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,10 +106,15 @@ public class MyConnectService  {
                 receive.start();
                 //create a socket to make the connection with the server
                 if (socket.isConnected()) {
-                    Log.i("MyConnectService", "connectSocket kördes och socket.isConnected är true");
+                    Log.i("Debugg", "connectSocket kördes och socket.isConnected är true");
+                    Log.i("Debugg","Test!");
+                    sendMessage(start_nbr);
+                    Log.i("Debugg","Test!");
+                    sendMessage(rideID);
+                    Log.i("Debugg","Test!");
                 }
             } catch (Exception e) {
-                Log.e("MyConnectService", "connectSocket fail", e);
+                Log.e("Debugg", "connectSocket fail", e);
             }
         }
     }
@@ -109,22 +124,22 @@ public class MyConnectService  {
         LatLng pos;
         public void run() {
             try {
-                Log.i("MyConnectService", "Klassen Receive har körts..");
+                Log.i("Debugg", "Klassen Receive har körts..");
                 while (receive != null) {
                     String message = br.readLine();
-                    Log.i("Recive","Svar från servern: " + message);
+                    Log.i("Debugg","Svar från servern: " + message);
                     importantStuff(message);
                 }
             } catch (Exception e) { // IOException, ClassNotFoundException
                 receive = null;
-                Log.i("MyConnectService", "Verkar som receive är null ... inte bra!");
+                Log.i("Debugg", "Verkar som receive är null ... inte bra!");
             }
         }
 
         private void importantStuff(String message) {
             String[]info = message.split(",");
             pos = new LatLng(Double.valueOf(info[0]), Double.valueOf(info[1]));
-            Log.i("Receive","innan changeBikePos()");
+            Log.i("Debugg","innan changeBikePos()");
             Handler mainHandler = new Handler(activity.getMainLooper());
             mainHandler.post(new Runnable() {
                 @Override
@@ -133,13 +148,13 @@ public class MyConnectService  {
                         activity.controller.changeBikePos(pos);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.i("ERROR", "fel i try catch i importantStuff()");
+                        Log.i("Debugg", "fel i try catch i importantStuff()");
                     }
                 }
             });
-            Log.i("Receive", "efter changeBikePos()");
-            sendMessage("25");
-            Log.i("Receive","efter sendMessage(25)");
+            Log.i("Debugg", "efter changeBikePos()");
+            sendMessage(confirmRecive);
+            Log.i("Debugg", "efter sendMessage(25)");
         }
     }
 }
