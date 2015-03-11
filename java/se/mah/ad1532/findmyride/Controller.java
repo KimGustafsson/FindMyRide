@@ -2,6 +2,7 @@ package se.mah.ad1532.findmyride;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -12,15 +13,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Controller {
     MainActivity mainActivity;
     private MapFragment map;
     private GoogleMap myMap;
-    private LatLng malmo;
     MyConnectService connect;
     Button btn_poke;
     Switch switch_onoff;
+    LatLng malmo = new LatLng(55.59362448, 13.09414008);
 
     public Controller(final MainActivity mainActivity, Bundle savedInstanceState) {
         this.mainActivity = mainActivity;
@@ -41,10 +43,19 @@ public class Controller {
     private void initializeMap(MapFragment map) {
         myMap = map.getMap();
         myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        malmo = new LatLng(55.59362448, 13.09414008);
         myMap.setMyLocationEnabled(true);
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(malmo, 8));
+        myMap.addMarker(new MarkerOptions().position(malmo).title("Malmö!"));
     }
+
+
+    public void changeBikePos(LatLng pos){
+        myMap.clear();
+        Log.i("changeBikePos()","")
+        myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!"));
+    }
+
+
     private class onoffListener implements CompoundButton.OnCheckedChangeListener {
 
         @Override
@@ -65,7 +76,7 @@ public class Controller {
 
         @Override
         protected Object doInBackground(Object[] params) {
-            connect = new MyConnectService();
+            connect = new MyConnectService(mainActivity);
             return null;
         }
     }
