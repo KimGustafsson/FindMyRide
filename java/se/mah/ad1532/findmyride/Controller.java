@@ -51,7 +51,7 @@ public class Controller {
 
     public void changeBikePos(LatLng pos){
         myMap.clear();
-        Log.i("changeBikePos()","")
+        Log.i("changeBikePos()","kom hit iaf");
         myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!"));
     }
 

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="Poke"
             android:id="@+id/btn_poke"
-            android:layout_gravity="right|bottom" />
+            android:layout_gravity="left|top" />
 
     </FrameLayout>
 </LinearLayout>

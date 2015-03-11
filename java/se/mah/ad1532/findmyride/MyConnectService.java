@@ -127,7 +127,7 @@ public class MyConnectService  {
                 public void run() {
                     activity.controller.changeBikePos(pos);
                 }
-            });
+            }).start();
             Log.i("Receive", "efter changeBikePos()");
             sendMessage("25");
             Log.i("Receive","efter sendMessage(25)");
