@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -45,14 +47,14 @@ public class Controller {
         myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         myMap.setMyLocationEnabled(true);
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(malmo, 8));
-        myMap.addMarker(new MarkerOptions().position(malmo).title("Malmö!"));
+        myMap.addMarker(new MarkerOptions().position(malmo).title("Malmö!").icon(BitmapDescriptorFactory.fromResource(R.drawable.bmx)));
     }
 
 
     public void changeBikePos(LatLng pos){
         myMap.clear();
         Log.i("changeBikePos()","kom hit iaf");
-        myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!"));
+        myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!").snippet("Your ride is here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.bmx)));
     }
 
 

@@ -1,14 +1,12 @@
 package se.mah.ad1532.findmyride;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-
+import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,7 +18,7 @@ import java.net.Socket;
  * Created by Kim on 2014-10-23.
  */
 public class MyConnectService  {
-    public static final String SERVERIP = "192.168.43.250";
+    public static final String SERVERIP = "213.188.152.138";
     public static final int SERVERPORT = 25002;
     private Socket socket;
     private Receive receive;
@@ -32,36 +30,39 @@ public class MyConnectService  {
     BufferedReader br;
     MainActivity activity;
 
-
     public MyConnectService(MainActivity activity){
         this.activity = activity;
         Runnable connect = new connectSocket();
         new Thread(connect).start();
     }
 
-
     public void sendMessage(final String query) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(!socket.isConnected()) {
-                    Runnable runnable = new connectSocket();
-                    new Thread(runnable).start();
-                }
-                try {
-                    String message = query + "\n";
-                    bw.write(message);
-                    bw.flush();
-                    Log.i("MyConnectService", "sendMessage kördes");
-                    String state = receive.getState().toString();
-                    Log.i("MyConnectService", "sendMessage() receive state: " + state);
-                } catch (Exception e) {
-                    Log.i("MyConnectService", "sendMessage fail");
-                    if(receive == null) {
-                        receive = new Receive();
-                        receive.start();
+                if(socket!=null){
+                    if(!socket.isConnected()) {
+                        Runnable runnable = new connectSocket();
+                        new Thread(runnable).start();
                     }
+                    try {
+                        String message = query + "\n";
+                        bw.write(message);
+                        bw.flush();
+                        Log.i("MyConnectService", "sendMessage kördes");
+                        String state = receive.getState().toString();
+                        Log.i("MyConnectService", "sendMessage() receive state: " + state);
+                    } catch (Exception e) {
+                        Log.i("MyConnectService", "sendMessage fail");
+                        if(receive == null) {
+                            receive = new Receive();
+                            receive.start();
+                        }
+                    }
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(activity,"Server is offline",Toast.LENGTH_SHORT).show();
                 }
             }
         }).start();
@@ -70,6 +71,7 @@ public class MyConnectService  {
 
     public void disconnectSocket(){
         try {
+            if(socket!=null)
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,11 +129,11 @@ public class MyConnectService  {
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    try{
+                    try {
                         activity.controller.changeBikePos(pos);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        Log.i("ERROR","fel i try catch i importantStuff()");
+                        Log.i("ERROR", "fel i try catch i importantStuff()");
                     }
                 }
             });
