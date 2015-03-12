@@ -1,9 +1,8 @@
 package se.mah.ad1532.findmyride;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
+
 import com.google.android.gms.maps.model.LatLng;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,15 +16,17 @@ import java.net.Socket;
 /**
  * Created by Kim on 2014-10-23.
  */
-public class MyConnectService  {
+// ip Ussis server : 213.188.152.138
+// ip lokalt : 192.168.43.250
+public class Connect {
     public static final String SERVERIP = "213.188.152.138";
     public static final int SERVERPORT = 25002;
 
     // Koder till servern
-    final String start_nbr = "125";
-    final String rideID = "100,1337";
+    final String start_nbr = "125,1337";
+    final String rideID = "100";
     final String stop_nbr = "175";
-    final String confirmRecive = "150";
+    final String confirmReceive = "150";
 
     private Socket socket;
     private Receive receive;
@@ -35,10 +36,12 @@ public class MyConnectService  {
     OutputStreamWriter osw;
     BufferedWriter bw;
     BufferedReader br;
+    Handler mainHandler;
     MainActivity activity;
 
-    public MyConnectService(MainActivity activity){
+    public Connect(MainActivity activity){
         this.activity = activity;
+        mainHandler = new Handler(activity.getMainLooper());
         Runnable connect = new connectSocket();
         new Thread(connect).start();
     }
@@ -57,19 +60,10 @@ public class MyConnectService  {
                         String message = query + "\n";
                         bw.write(message);
                         bw.flush();
-                        Log.i("Debugg", "sendMessage kördes");
-                        String state = receive.getState().toString();
-                        Log.i("Debugg", "sendMessage() receive state: " + state);
+                        Log.i("Debugg", "sendMessage() :" + message);
                     } catch (Exception e) {
                         Log.i("Debugg", "sendMessage fail");
-                        if(receive == null) {
-                            receive = new Receive();
-                            receive.start();
-                        }
                     }
-                }else{
-                    Looper.prepare();
-                    Toast.makeText(activity,"Server is offline",Toast.LENGTH_SHORT).show();
                 }
             }
         }).start();
@@ -78,13 +72,14 @@ public class MyConnectService  {
 
     public void disconnectSocket(){
         Log.i("Debugg", "disconnectSocket()");
-        sendMessage(stop_nbr);
         try {
             if(socket!=null) {
                 socket.close();
+                Log.i("Debugg","socket.isClosed(): " + socket.isClosed());
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Log.i("Debugg","socket.close() exception");
         }
         socket = null;
     }
@@ -106,13 +101,23 @@ public class MyConnectService  {
                 receive.start();
                 //create a socket to make the connection with the server
                 if (socket.isConnected()) {
-                    Log.i("Debugg", "connectSocket kördes och socket.isConnected är true");
+                    Log.i("Debugg", "socket.isConnected är: " + socket.isConnected());
                     sendMessage(start_nbr);
-                    sendMessage(rideID);
-                    Log.i("Debugg","sendMessage() start_nbr och rideId!");
+                    Log.i("Debugg","sendMessage() start_nbr");
                 }
             } catch (Exception e) {
                 Log.e("Debugg", "connectSocket fail", e);
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            activity.controller.serverOffline();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.i("Debugg", "fel i try catch i importantStuff()");
+                        }
+                    }
+                });
             }
         }
     }
@@ -126,11 +131,25 @@ public class MyConnectService  {
                 while (receive != null) {
                     String message = br.readLine();
                     Log.i("Debugg","Svar från servern: " + message);
-                    importantStuff(message);
+
+                    if(message.equals("101")){
+                        Log.i("Debugg","Tog emot 101");
+                        sendMessage(rideID);
+                        Log.i("Debugg","Skickade rideID");
+                    }else if (message.startsWith("Z")){
+                        String coordinates = message.substring(1,message.length());
+                        Log.i("Debugg","tog emot koordinater:" + coordinates);
+                        importantStuff(coordinates);
+                    }else if(message.equals("299")){
+                        Log.i("Debugg","error code 299: Servern har inga koordinater");
+                    }else if (message.equals("199")){
+                        disconnectSocket();
+                    }
                 }
             } catch (Exception e) { // IOException, ClassNotFoundException
+                e.printStackTrace();
                 receive = null;
-                Log.i("Debugg", "Verkar som receive är null ... inte bra!");
+                Log.i("Debugg", "Receive är null");
             }
         }
 
@@ -138,7 +157,7 @@ public class MyConnectService  {
             String[]info = message.split(",");
             pos = new LatLng(Double.valueOf(info[0]), Double.valueOf(info[1]));
             Log.i("Debugg","innan changeBikePos()");
-            Handler mainHandler = new Handler(activity.getMainLooper());
+
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -150,9 +169,7 @@ public class MyConnectService  {
                     }
                 }
             });
-            Log.i("Debugg", "efter changeBikePos()");
-            sendMessage(confirmRecive);
-            Log.i("Debugg", "efter sendMessage(25)");
+            sendMessage(confirmReceive);
         }
     }
 }

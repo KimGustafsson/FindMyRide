@@ -1,5 +1,6 @@
 package se.mah.ad1532.findmyride;
 
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +20,8 @@ public class Controller {
     MainActivity mainActivity;
     private MapFragment map;
     private GoogleMap myMap;
-    MyConnectService connect;
-    Switch switch_onoff;
+    Connect connect;
+    Switch switch_track;
     Button btn_normal, btn_satelite, btn_hybrid;
     LatLng malmo = new LatLng(55.59362448, 13.09414008);
 
@@ -28,8 +29,8 @@ public class Controller {
         Log.i("Debugg", "Controller skapades");
         this.mainActivity = mainActivity;
         map = (MapFragment) mainActivity.getFragmentManager().findFragmentById(R.id.mapFrag);
-        switch_onoff = (Switch) mainActivity.findViewById(R.id.switch_onoff);
-        switch_onoff.setOnCheckedChangeListener(new onoffListener());
+        switch_track = (Switch) mainActivity.findViewById(R.id.switch_onoff);
+        switch_track.setOnCheckedChangeListener(new trackListener());
         btn_normal = (Button) mainActivity.findViewById(R.id.btn_normal);
         btn_hybrid = (Button) mainActivity.findViewById(R.id.btn_hybrid);
         btn_satelite = (Button) mainActivity.findViewById(R.id.btn_satelite);
@@ -50,24 +51,35 @@ public class Controller {
     public void changeBikePos(LatLng pos){
         myMap.clear();
         myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!").snippet("Your ride is here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.bmx)));
-        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 8));
-        Log.i("Debugg", "changeBikePos() kördes");
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+        Log.i("Debugg", "changeBikePos(): " + pos.toString());
+        playSound();
+    }
+
+    public void playSound(){
+        final MediaPlayer mp = MediaPlayer.create(mainActivity, R.raw.magic);
+        mp.start();
     }
 
 
-    private class onoffListener implements CompoundButton.OnCheckedChangeListener {
+    public void serverOffline(){
+        Toast.makeText(mainActivity,"Server is offline, our server gnomes are trying to fix it!",Toast.LENGTH_LONG).show();
+    }
+
+
+    private class trackListener implements CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked){
-                Toast.makeText(mainActivity,"Connecting!",Toast.LENGTH_SHORT).show();
-                new supersyncconnectclassen().execute();
+                Toast.makeText(mainActivity,"Fetching position!",Toast.LENGTH_SHORT).show();
+                new startConnection().execute();
                 Log.i("Debugg", "Switchen är på");
             }else{
                 Log.i("Debugg", "Switchen är av");
                 Toast.makeText(mainActivity,"Disconnecting!",Toast.LENGTH_SHORT).show();
                 if(connect!=null){
-                    connect.disconnectSocket();
+                    connect.sendMessage(connect.stop_nbr);
                     myMap.clear();
                     myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(malmo, 0));
                 }
@@ -75,12 +87,12 @@ public class Controller {
         }
     }
 
-    private class supersyncconnectclassen extends AsyncTask{
+    private class startConnection extends AsyncTask{
 
         @Override
         protected Object doInBackground(Object[] params) {
             Log.i("Debugg", "doinBackground()");
-            connect = new MyConnectService(mainActivity);
+            connect = new Connect(mainActivity);
             return null;
         }
     }
