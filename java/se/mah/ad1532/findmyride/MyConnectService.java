@@ -23,7 +23,7 @@ public class MyConnectService  {
 
     // Koder till servern
     final String start_nbr = "125";
-    final String rideID = "1337";
+    final String rideID = "100,1337";
     final String stop_nbr = "175";
     final String confirmRecive = "150";
 
@@ -107,11 +107,9 @@ public class MyConnectService  {
                 //create a socket to make the connection with the server
                 if (socket.isConnected()) {
                     Log.i("Debugg", "connectSocket kördes och socket.isConnected är true");
-                    Log.i("Debugg","Test!");
                     sendMessage(start_nbr);
-                    Log.i("Debugg","Test!");
                     sendMessage(rideID);
-                    Log.i("Debugg","Test!");
+                    Log.i("Debugg","sendMessage() start_nbr och rideId!");
                 }
             } catch (Exception e) {
                 Log.e("Debugg", "connectSocket fail", e);

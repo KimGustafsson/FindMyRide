@@ -15,12 +15,45 @@
             android:id="@+id/mapFrag"
             android:layout_gravity="center" />
 
-        <Switch
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="On/Off"
-            android:id="@+id/switch_onoff"
-            android:layout_gravity="center_horizontal|bottom" />
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/black">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Normal"
+                android:id="@+id/btn_normal"
+                android:layout_weight="1"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Satelite"
+                android:id="@+id/btn_satelite"
+                android:layout_weight="1"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hybrid"
+                android:layout_weight="1"
+                android:id="@+id/btn_hybrid" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Track Ride"
+                android:layout_weight="1"
+                android:id="@+id/switch_onoff"
+                android:textColor="@color/abc_primary_text_material_dark" />
+        </LinearLayout>
 
     </FrameLayout>
 </LinearLayout>

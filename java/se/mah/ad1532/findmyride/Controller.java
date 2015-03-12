@@ -3,6 +3,8 @@ package se.mah.ad1532.findmyride;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ public class Controller {
     private GoogleMap myMap;
     MyConnectService connect;
     Switch switch_onoff;
+    Button btn_normal, btn_satelite, btn_hybrid;
     LatLng malmo = new LatLng(55.59362448, 13.09414008);
 
     public Controller(final MainActivity mainActivity, Bundle savedInstanceState) {
@@ -27,8 +30,14 @@ public class Controller {
         map = (MapFragment) mainActivity.getFragmentManager().findFragmentById(R.id.mapFrag);
         switch_onoff = (Switch) mainActivity.findViewById(R.id.switch_onoff);
         switch_onoff.setOnCheckedChangeListener(new onoffListener());
+        btn_normal = (Button) mainActivity.findViewById(R.id.btn_normal);
+        btn_hybrid = (Button) mainActivity.findViewById(R.id.btn_hybrid);
+        btn_satelite = (Button) mainActivity.findViewById(R.id.btn_satelite);
+        btn_normal.setOnClickListener(new normalMapClicked());
+        btn_satelite.setOnClickListener(new sateliteMapClicked());
+        btn_hybrid.setOnClickListener(new hybridMapClicked());
         initializeMap(map);
-    }
+}
 
     private void initializeMap(MapFragment map) {
         myMap = map.getMap();
@@ -73,6 +82,27 @@ public class Controller {
             Log.i("Debugg", "doinBackground()");
             connect = new MyConnectService(mainActivity);
             return null;
+        }
+    }
+
+    private class normalMapClicked implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+    }
+
+    private class sateliteMapClicked implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            myMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        }
+    }
+
+    private class hybridMapClicked implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         }
     }
 }
