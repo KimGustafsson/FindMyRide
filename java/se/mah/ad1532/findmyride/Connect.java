@@ -28,7 +28,7 @@ public class Connect {
     final String stop_nbr = "175";
     final String confirmReceive = "150";
 
-    private Socket socket;
+    Socket socket;
     private Receive receive;
     private InputStream is;
     private OutputStream os;
@@ -42,6 +42,7 @@ public class Connect {
     public Connect(MainActivity activity){
         this.activity = activity;
         mainHandler = new Handler(activity.getMainLooper());
+        Log.i("Debugg","Skapade en ny connect / socket");
         Runnable connect = new connectSocket();
         new Thread(connect).start();
     }
@@ -156,7 +157,6 @@ public class Connect {
         private void importantStuff(String message) {
             String[]info = message.split(",");
             pos = new LatLng(Double.valueOf(info[0]), Double.valueOf(info[1]));
-            Log.i("Debugg","innan changeBikePos()");
 
             mainHandler.post(new Runnable() {
                 @Override

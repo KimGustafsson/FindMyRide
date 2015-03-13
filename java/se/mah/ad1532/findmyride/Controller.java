@@ -24,6 +24,7 @@ public class Controller {
     Switch switch_track;
     Button btn_normal, btn_satelite, btn_hybrid;
     LatLng malmo = new LatLng(55.59362448, 13.09414008);
+    LatLng latestPos;
 
     public Controller(final MainActivity mainActivity, Bundle savedInstanceState) {
         Log.i("Debugg", "Controller skapades");
@@ -44,11 +45,13 @@ public class Controller {
         myMap = map.getMap();
         myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         myMap.setMyLocationEnabled(true);
+
         Log.i("Debugg", "kartan initierades");
     }
 
 
     public void changeBikePos(LatLng pos){
+        latestPos = pos;
         myMap.clear();
         myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!").snippet("Your ride is here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.bmx)));
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
