@@ -8,13 +8,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.google.android.gms.maps.model.LatLng;
 
-
+/**
+ * Applikationens Aktivitetsklass.
+ * Skapar en Controller.
+ *
+ */
 public class MainActivity extends ActionBarActivity {
     Controller controller;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
 
 
+    /**
+     * En vanlig onCreate()
+     * Skapar en Controller.
+     * Initierar SP.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +33,11 @@ public class MainActivity extends ActionBarActivity {
         controller = new Controller(this, savedInstanceState);
     }
 
+    /**
+     * Kollar om det finns en sparad position i SP (Shared Preferences)
+     * Om det finns en sparad pos så skickar vi den till metoden i Controller som
+     * flyttar markören på kartan.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -35,6 +50,14 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Säkerställer först att vi har avbrutit kontakten med servern.
+     * (Så att man inte har massa sockets öppna med samma server)
+     * Om socketen är kopplad mot servern så skickar vi ett meddelande som
+     * gör att vi kommer att stänga socketen.
+     * Och om vi har en position sparad i variabeln latestPos så sparar vi den i SP
+     * så attvi får med den till nästa gång appen körs.
+     */
     @Override
     protected void onPause() {
         super.onPause();

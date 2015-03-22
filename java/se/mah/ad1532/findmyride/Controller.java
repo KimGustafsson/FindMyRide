@@ -16,6 +16,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Klassen som har hand om komunikationen mellan MainActivity och Connect.
+ * Denhar också hand om de saker som bör göras på UI-tråden.
+ * Kartan och alla komponenter initieras i denna klassen.
+ */
 public class Controller {
     MainActivity mainActivity;
     private MapFragment map;
@@ -26,6 +31,12 @@ public class Controller {
     LatLng malmo = new LatLng(55.59362448, 13.09414008);
     LatLng latestPos;
 
+    /**
+     * Konstruktor som tar emot en aktivitet och den aktivitetens Bundle.
+     * Här instansieras kartan, alla knappar/switchar och dess lyssnare.
+     * @param mainActivity = aktiviteten
+     * @param savedInstanceState = Bundle
+     */
     public Controller(final MainActivity mainActivity, Bundle savedInstanceState) {
         Log.i("Debugg", "Controller skapades");
         this.mainActivity = mainActivity;
@@ -41,6 +52,10 @@ public class Controller {
         initializeMap(map);
 }
 
+    /**
+     * Här initieras kartan.
+     * @param map = den karta som ska initieras.
+     */
     private void initializeMap(MapFragment map) {
         myMap = map.getMap();
         myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -50,6 +65,12 @@ public class Controller {
     }
 
 
+    /**
+     * Metod som först tar bor allt på kartan och sedan sätter ut
+     * en markör på de koordinaterna som skickas med.
+     * Sedan zoomas kartan in vid markören och ett ljud spelas upp.
+     * @param pos
+     */
     public void changeBikePos(LatLng pos){
         latestPos = pos;
         myMap.clear();
@@ -59,17 +80,28 @@ public class Controller {
         playSound();
     }
 
+
+    /**
+     * Metod som spelar upp ett ljud.
+     */
     public void playSound(){
         final MediaPlayer mp = MediaPlayer.create(mainActivity, R.raw.magic);
         mp.start();
     }
 
 
+    /**
+     * Metod som skriver ut en Toast på skärmen.
+     */
     public void serverOffline(){
         Toast.makeText(mainActivity,"Server is offline, our server gnomes are trying to fix it!",Toast.LENGTH_LONG).show();
     }
 
 
+    /**
+     * Lyssnaren på switchen. Om switchen är på så startas en AsyncTask som kopplar upp applikationen mot servern.
+     * Om switchen är off så skickas ett meddelande till servern som säger att man ska koppla ifrån socketen.
+     */
     private class trackListener implements CompoundButton.OnCheckedChangeListener {
 
         @Override
@@ -83,13 +115,14 @@ public class Controller {
                 Toast.makeText(mainActivity,"Disconnecting!",Toast.LENGTH_SHORT).show();
                 if(connect!=null){
                     connect.sendMessage(connect.stop_nbr);
-                    myMap.clear();
-                    myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(malmo, 0));
                 }
             }
         }
     }
 
+    /**
+     * En AsyncTask som startar uppkopplingen mot servern. Är en asynctask för att inte frysa GUI vid uppkoppling.
+     */
     private class startConnection extends AsyncTask{
 
         @Override
@@ -100,6 +133,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Sätter kartans typ till Normal.
+     */
     private class normalMapClicked implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -107,6 +143,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Sätter kartans typ till Sattelit.
+     */
     private class sateliteMapClicked implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -114,6 +153,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Sätter kartans typ till Hybrid.
+     */
     private class hybridMapClicked implements View.OnClickListener {
         @Override
         public void onClick(View v) {
