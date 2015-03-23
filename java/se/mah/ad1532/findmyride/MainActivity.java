@@ -62,19 +62,17 @@ public class MainActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         Log.i("Debugg","onPause()");
-        if(controller!=null&&controller.connect!=null)
-        if (controller.connect.socket!=null){
-            if(controller.connect.socket.isConnected())
+        if(controller!=null&&controller.connect!=null&&controller.connect.socket!=null&&controller.connect.socket.isConnected()){
             controller.connect.sendMessage(controller.connect.stop_nbr);
-        }
-        if(controller.latestPos!=null){
-            Double lat, lng;
-            lat = controller.latestPos.latitude;
-            lng = controller.latestPos.longitude;
-            String posToSave = lat.toString() + "," + lng.toString();
-            editor = prefs.edit();
-            editor.putString("lastPos", posToSave);
-            editor.apply();
+            if(controller.latestPos!=null) {
+                Double lat, lng;
+                lat = controller.latestPos.latitude;
+                lng = controller.latestPos.longitude;
+                String posToSave = lat.toString() + "," + lng.toString();
+                editor = prefs.edit();
+                editor.putString("lastPos", posToSave);
+                editor.apply();
+            }
         }
     }
 
