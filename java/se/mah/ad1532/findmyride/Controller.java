@@ -27,9 +27,11 @@ public class Controller {
     private GoogleMap myMap;
     Connect connect;
     Switch switch_track;
+    Switch switch_zoom;
     Button btn_normal, btn_satelite, btn_hybrid;
     LatLng malmo = new LatLng(55.59362448, 13.09414008);
     LatLng latestPos;
+    boolean autozoom = true;
 
     /**
      * Konstruktor som tar emot en aktivitet och den aktivitetens Bundle.
@@ -42,7 +44,10 @@ public class Controller {
         this.mainActivity = mainActivity;
         map = (MapFragment) mainActivity.getFragmentManager().findFragmentById(R.id.mapFrag);
         switch_track = (Switch) mainActivity.findViewById(R.id.switch_onoff);
+        switch_zoom = (Switch) mainActivity.findViewById(R.id.switch_zoom);
+        switch_zoom.setChecked(true);
         switch_track.setOnCheckedChangeListener(new trackListener());
+        switch_zoom.setOnCheckedChangeListener(new zoomListener());
         btn_normal = (Button) mainActivity.findViewById(R.id.btn_normal);
         btn_hybrid = (Button) mainActivity.findViewById(R.id.btn_hybrid);
         btn_satelite = (Button) mainActivity.findViewById(R.id.btn_satelite);
@@ -75,7 +80,8 @@ public class Controller {
         latestPos = pos;
         myMap.clear();
         myMap.addMarker(new MarkerOptions().position(pos).title("Your Ride!").snippet("Your ride is here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.bmx)));
-        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+        if(autozoom)
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 20));
         Log.i("Debugg", "changeBikePos(): " + pos.toString());
         playSound();
     }
@@ -160,6 +166,23 @@ public class Controller {
         @Override
         public void onClick(View v) {
             myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+    }
+
+    /**
+     * Lyssnare till auto zoom switchen.
+     */
+    private class zoomListener implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked){
+                autozoom = true;
+                Toast.makeText(mainActivity,"Auto zoom activated!",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                autozoom = false;
+                Toast.makeText(mainActivity,"Auto zoom deactivated!",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

@@ -16,43 +16,67 @@
             android:layout_gravity="center" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:background="@color/black">
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Normal"
-                android:id="@+id/btn_normal"
-                android:layout_weight="1"/>
+                android:background="@color/black">
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Satelite"
-                android:id="@+id/btn_satelite"
-                android:layout_weight="1"/>
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Normal"
+                    android:id="@+id/btn_normal"
+                    android:layout_weight="1"/>
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hybrid"
-                android:layout_weight="1"
-                android:id="@+id/btn_hybrid" />
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Satelite"
+                    android:id="@+id/btn_satelite"
+                    android:layout_weight="1"/>
 
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Track Ride"
-                android:layout_weight="1"
-                android:id="@+id/switch_onoff"
-                android:textColor="@color/abc_primary_text_material_dark" />
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hybrid"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_hybrid" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@color/black">
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Track my ride!"
+                    android:layout_weight="1"
+                    android:id="@+id/switch_onoff"
+                    android:textColor="@color/abc_primary_text_material_dark" />
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Auto Zoom"
+                    android:id="@+id/switch_zoom"
+                    android:layout_weight="1"
+                    android:textColor="@color/abc_primary_text_material_dark"/>
+            </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>
