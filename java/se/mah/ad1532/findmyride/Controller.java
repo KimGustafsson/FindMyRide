@@ -31,7 +31,7 @@ public class Controller {
     Button btn_normal, btn_satelite, btn_hybrid;
     LatLng malmo = new LatLng(55.59362448, 13.09414008);
     LatLng latestPos;
-    boolean autozoom = true;
+    boolean autozoom = false;
 
     /**
      * Konstruktor som tar emot en aktivitet och den aktivitetens Bundle.
@@ -45,7 +45,6 @@ public class Controller {
         map = (MapFragment) mainActivity.getFragmentManager().findFragmentById(R.id.mapFrag);
         switch_track = (Switch) mainActivity.findViewById(R.id.switch_onoff);
         switch_zoom = (Switch) mainActivity.findViewById(R.id.switch_zoom);
-        switch_zoom.setChecked(true);
         switch_track.setOnCheckedChangeListener(new trackListener());
         switch_zoom.setOnCheckedChangeListener(new zoomListener());
         btn_normal = (Button) mainActivity.findViewById(R.id.btn_normal);
