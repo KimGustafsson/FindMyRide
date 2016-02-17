@@ -20,3 +20,5 @@ User can login to the systems webpage with their user credentials they receive w
 
 Arduino ADK MEGA
 We used the Mega to install our tracking program and process the data from the 3G
+
+![findMyRide](http://simon.brasse-pc.eu/portfolio/images/findmyride/findMyRide.png)
